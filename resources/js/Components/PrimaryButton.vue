@@ -1,55 +1,39 @@
+<script setup>
+defineProps({
+    text: {
+        type: String,
+        default: 'Botón',
+    },
+    color: {
+        type: String,
+        default: '#2F4F4F', // Verde bosque
+    },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
+});
+
+defineEmits(['click']);
+</script>
+
 <template>
-    <button class="primary-button" :class="{ disabled: disabled }" :style="{ backgroundColor: color }"
-        @click="$emit('click')" :disabled="disabled">
+    <button
+        class="inline-flex items-center px-6 py-3 text-base font-semibold text-white rounded-md shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        :style="{ backgroundColor: disabled ? '#D1D5DB' : color }"
+        :class="{ 'opacity-25 cursor-not-allowed': disabled, 'hover:bg-emerald-600': !disabled }"
+        :disabled="disabled"
+        @click="$emit('click')"
+    >
         {{ text }}
     </button>
 </template>
 
-<script>
-export default {
-    name: 'PrimaryButton',
-    props: {
-        text: {
-            type: String,
-            default: 'Botón',
-        },
-        color: {
-            type: String,
-            default: '#4CAF50', // Verde por defecto, cambiá según el tema de ANA
-        },
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
-    },
-};
-</script>
-
 <style scoped>
-.primary-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.bg-emerald-600 {
+    background-color: #059669;
 }
-
-.primary-button:hover:not(.disabled) {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
-
-.primary-button:active:not(.disabled) {
-    transform: scale(0.95);
-}
-
-.primary-button.disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
+.focus\:ring-emerald-500:focus {
+    --tw-ring-color: #10B981;
 }
 </style>

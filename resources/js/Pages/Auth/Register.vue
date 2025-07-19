@@ -1,198 +1,140 @@
-<template>
-    <div class="register-container">
-        <h2>Registro en ANA</h2>
-        <form @submit.prevent="submit">
-            <div class="form-group">
-                <label for="name">Nombre</label>
-                <input id="name" v-model="form.name" type="text" class="form-control"
-                    :class="{ 'is-invalid': form.errors.name }" required autofocus />
-                <div v-if="form.errors.name" class="invalid-feedback">
-                    {{ form.errors.name }}
-                </div>
-            </div>
+<script setup>
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
-            <div class="form-group">
-                <label for="email">Correo Electrónico</label>
-                <input id="email" v-model="form.email" type="email" class="form-control"
-                    :class="{ 'is-invalid': form.errors.email }" required />
-                <div v-if="form.errors.email" class="invalid-feedback">
-                    {{ form.errors.email }}
-                </div>
-            </div>
+const form = useForm({
+    name: '',
+    email: '',
+    birth_date: null,
+    country: '',
+    password: '',
+    password_confirmation: '',
+});
 
-            <div class="form-group">
-                <label for="birth_date">Fecha de Nacimiento</label>
-                <input id="birth_date" v-model="form.birth_date" type="date" class="form-control"
-                    :class="{ 'is-invalid': form.errors.birth_date }" />
-                <div v-if="form.errors.birth_date" class="invalid-feedback">
-                    {{ form.errors.birth_date }}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="country">País</label>
-                <select id="country" v-model="form.country" class="form-control"
-                    :class="{ 'is-invalid': form.errors.country }">
-                    <option value="" disabled selected>Selecciona un país</option>
-                    <option value="Argentina">Argentina</option>
-                    <option value="Brasil">Brasil</option>
-                    <option value="Chile">Chile</option>
-                    <option value="Estados Unidos">Estados Unidos</option>
-                    <option value="España">España</option>
-                    <!-- Agrega más países según necesites -->
-                </select>
-                <div v-if="form.errors.country" class="invalid-feedback">
-                    {{ form.errors.country }}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input id="password" v-model="form.password" type="password" class="form-control"
-                    :class="{ 'is-invalid': form.errors.password }" required />
-                <div v-if="form.errors.password" class="invalid-feedback">
-                    {{ form.errors.password }}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="password_confirmation">Confirmar Contraseña</label>
-                <input id="password_confirmation" v-model="form.password_confirmation" type="password"
-                    class="form-control" required />
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="primary-button" :disabled="form.processing">
-                    Registrar
-                </button>
-                <button type="button" class="secondary-button" @click="$inertia.visit(route('login'))">
-                    Cancelar
-                </button>
-            </div>
-        </form>
-    </div>
-</template>
-
-<script>
-import { useForm } from '@inertiajs/vue3';
-
-export default {
-    setup() {
-        const form = useForm({
-            name: '',
-            email: '',
-            birth_date: null,
-            country: '',
-            password: '',
-            password_confirmation: '',
-        });
-
-        function submit() {
-            form.post(route('register'), {
-                onFinish: () => form.reset('password', 'password_confirmation'),
-            });
-        }
-
-        return { form, submit };
-    },
+const submit = () => {
+    form.post(route('register'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
 };
 </script>
 
+<template>
+    <GuestLayout>
+        <Head title="Registro" />
+        <div class="p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Registrarse en ANA</h2>
+            <form @submit.prevent="submit">
+                <div>
+                    <InputLabel for="name" value="Nombre" class="text-gray-700" />
+                    <TextInput
+                        id="name"
+                        v-model="form.name"
+                        type="text"
+                        class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                        required
+                        autofocus
+                    />
+                    <InputError class="mt-2" :message="form.errors.name" />
+                </div>
+                <div class="mt-6">
+                    <InputLabel for="email" value="Correo Electrónico" class="text-gray-700" />
+                    <TextInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.email" />
+                </div>
+                <div class="mt-6">
+                    <InputLabel for="birth_date" value="Fecha de Nacimiento" class="text-gray-700" />
+                    <TextInput
+                        id="birth_date"
+                        v-model="form.birth_date"
+                        type="date"
+                        class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                    />
+                    <InputError class="mt-2" :message="form.errors.birth_date" />
+                </div>
+                <div class="mt-6">
+                    <InputLabel for="country" value="País" class="text-gray-700" />
+                    <select
+                        id="country"
+                        v-model="form.country"
+                        class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                    >
+                        <option value="" disabled selected>Selecciona un país</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Brasil">Brasil</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Estados Unidos">Estados Unidos</option>
+                        <option value="España">España</option>
+                    </select>
+                    <InputError class="mt-2" :message="form.errors.country" />
+                </div>
+                <div class="mt-6">
+                    <InputLabel for="password" value="Contraseña" class="text-gray-700" />
+                    <TextInput
+                        id="password"
+                        v-model="form.password"
+                        type="password"
+                        class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
+                <div class="mt-6">
+                    <InputLabel for="password_confirmation" value="Confirmar Contraseña" class="text-gray-700" />
+                    <TextInput
+                        id="password_confirmation"
+                        v-model="form.password_confirmation"
+                        type="password"
+                        class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <Link
+                        :href="route('login')"
+                        class="text-sm text-gray-600 hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                        ¿Ya tienes cuenta? Inicia sesión
+                    </Link>
+                    <PrimaryButton
+                        :text="'Registrar'"
+                        :disabled="form.processing"
+                    />
+                </div>
+                <div class="mt-4 text-center">
+                    <Link :href="route('login')">
+                        <SecondaryButton>
+                            Volver al Inicio
+                        </SecondaryButton>
+                    </Link>
+                </div>
+            </form>
+        </div>
+    </GuestLayout>
+</template>
+
 <style scoped>
-.register-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
+.bg-forest-green-900 {
+    background-color: #2F4F4F;
 }
-
-.form-group {
-    margin-bottom: 16px;
+.bg-emerald-600 {
+    background-color: #059669;
 }
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
+.text-emerald-600 {
+    color: #059669;
 }
-
-.form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.form-control.is-invalid {
-    border-color: #dc3545;
-}
-
-.invalid-feedback {
-    color: #dc3545;
-    font-size: 14px;
-    font-family: 'Arial', sans-serif;
-    /* Cambia según el estilo de ANA */
-}
-
-.form-actions {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-}
-
-.primary-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    background-color: #FF5733;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.primary-button:hover:not(:disabled) {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
-
-.primary-button:active:not(:disabled) {
-    transform: scale(0.95);
-}
-
-.primary-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-.secondary-button {
-    padding: 10px 20px;
-    border: 2px solid #FF5733;
-    border-radius: 6px;
-    background-color: transparent;
-    color: #FF5733;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
-}
-
-.secondary-button:hover:not(:disabled) {
-    background-color: rgba(255, 87, 51, 0.1);
-    transform: scale(1.05);
-}
-
-.secondary-button:active:not(:disabled) {
-    transform: scale(0.95);
-}
-
-.secondary-button:disabled {
-    border-color: #ccc;
-    color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
+.focus\:ring-emerald-500:focus {
+    --tw-ring-color: #10B981;
 }
 </style>
